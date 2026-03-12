@@ -1,0 +1,104 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+Desktop.ini
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyd
+*.pyo
+*.so
+.Python
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.pyre/
+.hypothesis/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Packaging / build outputs
+build/
+dist/
+site/
+*.egg-info/
+.eggs/
+pip-wheel-metadata/
+
+# Jupyter / notebooks
+.ipynb_checkpoints/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+!.env.sample
+*.local
+
+# Logs
+*.log
+logs/
+
+# Frontend / Node
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/
+.parcel-cache/
+.next/
+.nuxt/
+.svelte-kit/
+coverage/
+*.tsbuildinfo
+
+# Model artifacts
+models/**
+!models/
+!models/.gitkeep
+!models/README.md
+*.pkl
+*.joblib
+*.onnx
+*.h5
+*.keras
+*.pt
+*.pth
+
+# Data artifacts
+data/**
+!data/
+!data/.gitkeep
+!data/README.md
+*.csv
+*.tsv
+*.parquet
+*.feather
+*.npy
+*.npz
+*.hdf5
+
+# Local databases / caches
+*.db
+*.sqlite
+*.sqlite3
+.cache/
+
+# Runtime outputs
+tmp/
+temp/
+*.pid
