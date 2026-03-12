@@ -5,7 +5,6 @@ import joblib
 from pathlib import Path
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
-from sklearn.preprocessing import LabelEncoder
 from xgboost import XGBClassifier
 from sklearn.metrics import f1_score
 
@@ -37,11 +36,10 @@ df = df.sample(20000, random_state=42)
 df.replace([np.inf, -np.inf], np.nan, inplace=True)
 df.dropna(subset=FEATURES + ["Label"], inplace=True)
 
-le = LabelEncoder()
-df["Label"] = le.fit_transform(df["Label"])
+df["BinaryLabel"] = (df["Label"].str.strip() != "BENIGN").astype(int)
 
 X = df[FEATURES]
-y = df["Label"]
+y = df["BinaryLabel"]
 
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, stratify=y, random_state=42
@@ -52,13 +50,14 @@ X_train_scaled = scaler.fit_transform(X_train)
 X_test_scaled = scaler.transform(X_test)
 
 print("Training XGBoost model...")
-model = XGBClassifier(use_label_encoder=False, eval_metric="mlogloss")
+model = XGBClassifier(eval_metric="logloss")
 model.fit(X_train_scaled, y_train)
 
 preds = model.predict(X_test_scaled)
-f1 = f1_score(y_test, preds, average="weighted")
+f1 = f1_score(y_test, preds)
 print(f"F1 Score: {f1:.4f}")
 
 joblib.dump(model, MODEL_DIR / "intrusion_model.pkl")
 joblib.dump(scaler, MODEL_DIR / "scaler.pkl")
+joblib.dump(["BENIGN", "MALICIOUS"], MODEL_DIR / "label_classes.pkl")
 print(f"Model and scaler saved to {MODEL_DIR}")

@@ -19,6 +19,8 @@ MODEL_DIR = BASE_DIR / "models"
 
 model = joblib.load(MODEL_DIR / "intrusion_model.pkl")
 scaler = joblib.load(MODEL_DIR / "scaler.pkl")
+label_classes_path = MODEL_DIR / "label_classes.pkl"
+label_classes = joblib.load(label_classes_path) if label_classes_path.exists() else ["BENIGN"]
 
 
 class TrafficData(BaseModel):
@@ -50,9 +52,11 @@ def predict(data: TrafficData):
 
     features_scaled = scaler.transform(features)
 
-    prediction = model.predict(features_scaled)[0]
+    prediction = int(model.predict(features_scaled)[0])
+    predicted_label = label_classes[prediction] if prediction < len(label_classes) else str(prediction)
+    probability = float(model.predict_proba(features_scaled)[0][prediction])
 
-    if prediction == 1:
+    if predicted_label != "BENIGN":
         status = "MALICIOUS"
         risk = "HIGH"
     else:
@@ -60,6 +64,8 @@ def predict(data: TrafficData):
         risk = "LOW"
 
     return {
+        "predicted_label": predicted_label,
         "traffic_status": status,
-        "risk_level": risk
+        "risk_level": risk,
+        "confidence": round(probability * 100, 2)
     }
